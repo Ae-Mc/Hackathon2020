@@ -5,16 +5,18 @@ from tempfile import TemporaryFile
 
 def imageToText(imageFilename: str) -> str:
     with TemporaryFile(mode='r', encoding="utf-8") as tempfile:
+        tempfileName = str(tempfile.name)
         system('tesseract -l "rus+eng" "{}" "{}"'.format(
-            imageFilename, tempfile.name))
-        with open(tempfile.name + '.txt', encoding='utf-8') as f:
+            imageFilename, tempfileName))
+        with open(tempfileName + '.txt', encoding='utf-8') as f:
             return f.read()
 
 
 def pdfToText(pdfFilename: str) -> str:
+    pdfFilename = str(pdfFilename)
     doc: fitz.Document = fitz.open(pdfFilename)
     text = ""
-    tempfileName = TemporaryFile().name
+    tempfileName = str(TemporaryFile().name)
     for i in range(len(doc)):
         for j, img in enumerate(doc.getPageImageList(i)):
             xref = img[0]
