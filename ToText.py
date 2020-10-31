@@ -5,7 +5,8 @@ from tempfile import TemporaryFile
 
 def imageToText(imageFilename: str) -> str:
     with TemporaryFile(mode='r', encoding="utf-8") as tempfile:
-        system(f'tesseract -l "rus+eng" "{imageFilename}" "{tempfile.name}"')
+        system('tesseract -l "rus+eng" "{}" "{}"'.format(
+            imageFilename, tempfile.name))
         with open(tempfile.name + '.txt', encoding='utf-8') as f:
             return f.read()
 
@@ -20,8 +21,8 @@ def pdfToText(pdfFilename: str) -> str:
             pix = fitz.Pixmap(doc, xref)
             if pix.n > 4:
                 pix = fitz.Pixmap(fitz.csRGB, pix)
-            pix.writePNG(f"{tempfileName}")
-            text += imageToText(f'{tempfileName}') + '\n'
+            pix.writePNG(tempfileName)
+            text += imageToText(tempfileName) + '\n'
     remove(tempfileName)
     doc.close()
     return text
